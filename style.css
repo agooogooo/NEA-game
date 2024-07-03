@@ -1,17 +1,17 @@
 html {
   height: 100%;
   width: 100%;
-  background-color: black
+  background-color: black;
 }
 
-#game-container{
-  width: 1500px;
-
-  height: 1000px;
+#game-container {
+  width: fit-content;
+  height: 100vh;
+  top: 0;
+  padding: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:black
+  background-color: black
 }
-
-
