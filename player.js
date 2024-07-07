@@ -5,7 +5,6 @@ export class Player{
     this.position = position
     this.velocity = { x: 0, y: 0 };
     this.direction = "forward"
-    this.velocity = {x:0, y:0}
     this.hitboxSize = {x:40, y:40}
     this.animationFrame = 0;
     this.hitboxPosition = {x:0, y:0,}

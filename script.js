@@ -8,7 +8,7 @@ let keysPressed = [];
 let player;
 let map;
 
-const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png"];
+const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png"];
 
 const playerImages = {
   forward: ["images/player/bean.png"],
@@ -40,16 +40,24 @@ function loadImages(images, callback) {
 
 const allImages = [...Object.values(playerImages).flat(), ...mapImages];
 
-
 loadImages(allImages, function() {
   gamesetup()
 });
 
 function gamesetup(){
-  player = new Player({x:500, y:375}, loadedImages)
+  player = new Player({x:750, y:500}, loadedImages)
   map = new Map(loadedImages);
   gameloop()
 }
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('load', resizeCanvas);
+
 
 addEventListener("mousemove", (event) => {
   const rect = canvas.getBoundingClientRect();

@@ -68,15 +68,16 @@ export class Map{
         ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
         ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
         ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]]
-    this.size = { x: 42, y: 42 };
+    this.size = { x: 64, y: 64 };
   }
   drawBackground(ctx){
     for (let i = 0; i < this.mapBackground.length; i++) {
       for (let j = 0; j < this.mapBackground[i].length; j++) {
-        this.newPosition.x = ((i - 1) * 42) + (this.position.x);
-        this.newPosition.y = ((j - 1) * 42) + (this.position.y);
+        this.newPosition.x = ((i - 1) * 64) + (this.position.x);
+        this.newPosition.y = ((j - 1) * 64) + (this.position.y);
         if(this.mapBackground[i][j]===""){
-          ctx.drawImage(this.loadedImages["images/other/floor.png"], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
+          let grass = [this.loadedImages["images/other/grass/grass1.png"], this.loadedImages["images/other/grass/grass2.png"], this.loadedImages["images/other/grass/grass3.png"], this.loadedImages["images/other/grass/grass4.png"]]
+          ctx.drawImage(grass[Math.floor(Math. random() * 4)], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
         }
       }   
     }
