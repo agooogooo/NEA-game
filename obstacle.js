@@ -12,4 +12,8 @@ export class Obstacle{
     ctx.strokeStyle = 'blue';
     ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y)
   }
+
+  checkCollision(){
+    
+  }
 }

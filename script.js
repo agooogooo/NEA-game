@@ -1,6 +1,6 @@
-import {Player} from './player.js'
-import {Map} from './map.js'
- 
+import { Player } from './player.js'
+import { Map } from './map.js'
+
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 let mousePos = { x: 0, y: 0 };
@@ -44,9 +44,11 @@ loadImages(allImages, function() {
   gamesetup()
 });
 
-function gamesetup(){
-  player = new Player({x:750, y:500}, loadedImages)
+function gamesetup() {
+  player = new Player({ x: 570, y: 300 }, loadedImages)
   map = new Map(loadedImages);
+  map.create()
+  console.log(map.mapBackground)
   gameloop()
 }
 
@@ -85,45 +87,52 @@ addEventListener("keyup", ({ key }) => {
     console.log(keysPressed)
   }
 });
-function canvasMovement(){
+function canvasMovement() {
   player.velocity.y = 0
   player.velocity.x = 0
-  if(keysPressed.includes("w")){
-    ctx.translate(0,5)
+  if (keysPressed.includes("w") && (player.collisions.up === false)) {
+    ctx.translate(0, 5)
     player.velocity.y -= 5
   }
-  if(keysPressed.includes("s")){
-    ctx.translate(0,-5)
+  if (keysPressed.includes("s") && (player.collisions.down === false)) {
+    ctx.translate(0, -5)
     player.velocity.y += 5
   }
-  if(keysPressed.includes("a")){
-    ctx.translate(5,0)
+  if (keysPressed.includes("a") && (player.collisions.left === false)) {
+    ctx.translate(5, 0)
     player.velocity.x -= 5
   }
-  if(keysPressed.includes("d")){
-    ctx.translate(-5,0)
+  if (keysPressed.includes("d") && (player.collisions.down === false)) {
+    ctx.translate(-5, 0)
     player.velocity.x += 5
   }
-  if(keysPressed.includes("0")){
+  if (keysPressed.includes("0")) {
     ctx.translate((player.position.x), (player.position.y))
     player.position.x = 0
     player.position.y = 0
   }
 }
 
-function draw(){
+
+function drawUI() {
+  ctx.font = "30px Comic Sans MS"
+  ctx.fillStyle = "#424ef5"
+  ctx.fillText(player.health, -100 +player.position.x, -200+player.position.y)
+}
+function draw() {
   map.drawBackground(ctx)
   player.draw(ctx)
   player.makeHitbox(ctx)
   map.drawForeground(ctx)
+  drawUI()
 }
 
-function update(){
+function update() {
   canvasMovement()
   player.update()
 }
 
-function gameloop(){
+function gameloop() {
   ctx.clearRect(-100000, -100000, 10000000, 1000000)
   ctx.drawImage(loadedImages["images/other/floor.png"], 200, 200, 200, 200)
   update()

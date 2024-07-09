@@ -75,9 +75,17 @@ export class Map{
       for (let j = 0; j < this.mapBackground[i].length; j++) {
         this.newPosition.x = ((i - 1) * 64) + (this.position.x);
         this.newPosition.y = ((j - 1) * 64) + (this.position.y);
-        if(this.mapBackground[i][j]===""){
-          let grass = [this.loadedImages["images/other/grass/grass1.png"], this.loadedImages["images/other/grass/grass2.png"], this.loadedImages["images/other/grass/grass3.png"], this.loadedImages["images/other/grass/grass4.png"]]
-          ctx.drawImage(grass[Math.floor(Math. random() * 4)], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
+        if(this.mapBackground[i][j]===0){
+          ctx.drawImage(this.loadedImages["images/other/grass/grass1.png"], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
+        }
+        if(this.mapBackground[i][j]===1){
+          ctx.drawImage(this.loadedImages["images/other/grass/grass2.png"], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
+        }
+        if(this.mapBackground[i][j]===2){
+          ctx.drawImage(this.loadedImages["images/other/grass/grass3.png"], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
+        }
+        if(this.mapBackground[i][j]===3){
+          ctx.drawImage(this.loadedImages["images/other/grass/grass4.png"], this.newPosition.x, this.newPosition.y, this.size.x, this.size.y);
         }
       }   
     }
@@ -97,8 +105,16 @@ export class Map{
           let obstacle = new Obstacle({x:this.newPosition.x, y:this.newPosition.y}, {x:90, y:30}, this.loadedImages["images/other/rocks.png"], {x:70,y:20})
           ctx.drawImage(obstacle.image, obstacle.position.x, obstacle.position.y, obstacle.size.x, obstacle.size.y)
           obstacle.makeHitbox(ctx)
+          obstacle.checkCollision()
         }
       }   
+    }
+  }
+  create(){
+    for (let i = 0; i < this.mapBackground.length; i++) {
+      for (let j = 0; j < this.mapBackground[i].length; j++) {
+        this.mapBackground[i][j] = (Math.floor(Math.random()*4))
+      }
     }
   }
 }
