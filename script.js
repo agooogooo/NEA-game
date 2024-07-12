@@ -1,12 +1,14 @@
 import { Player } from './player.js'
 import { Map } from './map.js'
+import {Inventory} from './inventory.js'
 
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 let mousePos = { x: 0, y: 0 };
 let keysPressed = [];
-let player;
+export let player;
 let map;
+let inventory
 
 const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png"];
 
@@ -47,6 +49,7 @@ loadImages(allImages, function() {
 function gamesetup() {
   player = new Player({ x: 570, y: 300 }, loadedImages)
   map = new Map(loadedImages);
+  inventory = new Inventory(loadedImages, mousePos)
   map.create()
   console.log(map.mapBackground)
   gameloop()
@@ -74,6 +77,9 @@ addEventListener("mouseup", () => {
 });
 
 addEventListener("keydown", ({ key, repeat }) => {
+  if (key.toLowerCase() === "e"){
+    inventory.toggleInventory()
+  }
   if (repeat) { return; }
   if (!keysPressed.includes(key.toLowerCase())) {
     keysPressed.unshift(key.toLowerCase());
@@ -90,51 +96,59 @@ addEventListener("keyup", ({ key }) => {
 function canvasMovement() {
   player.velocity.y = 0
   player.velocity.x = 0
-  if (keysPressed.includes("w") && (player.collisions.up === false)) {
-    ctx.translate(0, 5)
-    player.velocity.y -= 5
+  if(player.collisions.right){
+    console.log("colliding")
   }
-  if (keysPressed.includes("s") && (player.collisions.down === false)) {
-    ctx.translate(0, -5)
-    player.velocity.y += 5
+    if (keysPressed.includes("w") && (!player.collisions.up)) {
+      ctx.translate(0, 5)
+      player.velocity.y -= 5
+    }
+    if (keysPressed.includes("s") && (player.collisions.down === false)) {
+      ctx.translate(0, -5)
+      player.velocity.y += 5
+    }
+    if (keysPressed.includes("a") && (player.collisions.left === false)) {
+      ctx.translate(5, 0)
+      player.velocity.x -= 5
+    }
+    if (((keysPressed.includes("d")) && (player.collisions.right === false))) {
+      ctx.translate(-5, 0)
+      player.velocity.x += 5
+    }
+    if (keysPressed.includes("0")) {
+      ctx.translate((player.position.x), (player.position.y))
+      player.position.x = 0
+      player.position.y = 0
   }
-  if (keysPressed.includes("a") && (player.collisions.left === false)) {
-    ctx.translate(5, 0)
-    player.velocity.x -= 5
-  }
-  if (keysPressed.includes("d") && (player.collisions.down === false)) {
-    ctx.translate(-5, 0)
-    player.velocity.x += 5
-  }
-  if (keysPressed.includes("0")) {
-    ctx.translate((player.position.x), (player.position.y))
-    player.position.x = 0
-    player.position.y = 0
-  }
+  player.resetCollisions()
 }
 
 
 function drawUI() {
   ctx.font = "30px Comic Sans MS"
   ctx.fillStyle = "#424ef5"
-  ctx.fillText(player.health, -100 +player.position.x, -200+player.position.y)
+  ctx.fillText(player.health, -100 + player.position.x, -200 + player.position.y)
 }
 function draw() {
   map.drawBackground(ctx)
   player.draw(ctx)
   player.makeHitbox(ctx)
   map.drawForeground(ctx)
+  if(inventory.inventoryOpened === true){
+    inventory.draw(ctx)
+  }
   drawUI()
 }
 
 function update() {
   canvasMovement()
   player.update()
+  inventory.position.x += player.velocity.x
+  inventory.position.y += player.velocity.y
 }
 
 function gameloop() {
   ctx.clearRect(-100000, -100000, 10000000, 1000000)
-  ctx.drawImage(loadedImages["images/other/floor.png"], 200, 200, 200, 200)
   update()
   draw()
   requestAnimationFrame(gameloop);

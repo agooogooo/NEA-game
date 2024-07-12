@@ -24,4 +24,11 @@ export class Player{
     ctx.strokeStyle = 'red';
     ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y)
   }
+
+  resetCollisions(){
+    this.collisions.up = false
+    this.collisions.down = false
+    this.collisions.left = false
+    this.collisions.right = false
+  }
 }
