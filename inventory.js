@@ -7,6 +7,7 @@ export class Inventory {
     this.mousePos = mousePos;
     this.hoverImage = loadedImages["images/other/hover.png"];
     this.playerPos = playerPos;
+    this.angle = 0
 
 
 
@@ -58,7 +59,28 @@ export class Inventory {
       }
     }
   }
-  items(){
-    
+  items(ctx){
+    if (this.heldItem === this.loadedImages["images/other/bow.png"]){
+
+      // const X =  (this.playerPos.x + 30) -this.mousePos.x
+      // const Y =  (this.playerPos.y + 46) -this.mousePos.y 
+      // this.angle = Math.atan(X, Y)
+
+      this.angle -= 0.1
+      
+      const bowX = (this.playerPos.x + 30) + Math.cos(this.angle) * 100 
+      const bowY = (this.playerPos.y + 46) + Math.sin(this.angle) * 100 
+      
+      
+      ctx.save();
+      ctx.translate(bowX , bowY );
+      ctx.rotate(this.angle + 3*(Math.PI) / 4);
+      ctx.drawImage(this.loadedImages["images/other/bow.png"], -22.5, -22.5, 45, 45);
+      ctx.restore();
+
+
+
+
+    }
   }
 }

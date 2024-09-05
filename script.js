@@ -2,7 +2,7 @@ import { Player } from './player.js'
 import { Map } from './map.js'
 import { Inventory } from './inventory.js'
 
-fdklka
+
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 let mousePos = { x: 0, y: 0 };
@@ -18,8 +18,8 @@ let elapsedTime = 0;
 const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png"];
 
 const playerImages = {
-  forward: ["images/player/bean.png"],
-  left: ["images/player/bean.png"],
+  forward: ["images/player/been.png"],
+  left: ["images/player/been.png"],
   right: ["images/player/been.png"],
   back: ["images/player/playerBack.png"],
 };
@@ -63,6 +63,7 @@ function gamesetup() {
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  ctx.translate(570 - player.position.x, 300 - player.position.y)
 }
 
 window.addEventListener('resize', resizeCanvas);
@@ -186,8 +187,8 @@ function update(timestamp) {
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
   canvasMovement();
   player.update(map.obstacles, timestamp);
-  inventory.position.x += player.velocity.x;
-  inventory.position.y += player.velocity.y;
+  inventory.position.x = player.position.x - 170;
+  inventory.position.y = player.position.y - 180;
 
 }
 

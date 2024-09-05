@@ -11,11 +11,11 @@ export class Player {
     this.direction = "forward";
     this.state = "idle"
     this.images = {
-        forward: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
-        left: ["images/player/bean.png", "images/player/been.png", "images/player/bean.png"],
-        right: ["images/player/bean.png", "images/player/been.png", "images/player/bean.png"],
-        back: [ "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerBack.png"]
-                  }
+      forward: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
+      left: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+      right: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+      back: ["images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerBack.png"]
+    }
     this.hitboxSize = { x: 40, y: 40 };
     this.hitboxPosition = { x: 0, y: 0 };
     this.collisions = { up: false, down: false, left: false, right: false };
@@ -36,24 +36,24 @@ export class Player {
         this.handleCollision(obstacle);
       }
     }
-    if ((this.velocity.x === 0) && (this.velocity.y === 0)){
+    if ((this.velocity.x === 0) && (this.velocity.y === 0)) {
       this.state = "idle"
     }
-    else{
+    else {
       this.state = "moving"
     }
-    if(this.state === "moving"){
+    if (this.state === "moving") {
       if (currentTime - this.lastFrameChangeTime >= this.frameDuration) {
         this.lastFrameChangeTime = currentTime;
         this.currentFrameIndex = (this.currentFrameIndex + 1) % this.images[this.direction].length;
         this.image = this.loadedImages[this.images[this.direction][this.currentFrameIndex]];
       }
     }
-    if(this.state === "idle"){
+    if (this.state === "idle") {
       this.image = this.loadedImages[this.images[this.direction][2]]
     }
-    
-    
+
+    inventory.heldItem = inventory.inventory[0][0]
   }
 
   handleCollision(obstacle) {
@@ -71,8 +71,6 @@ export class Player {
           this.collisions.right = true;
         }
         else if (obstacle.obstacleType === "item") {
-          console.log(obstacle.coords.x)
-          console.log(obstacle.coords.y)
           map.mapForeground[obstacle.coords.x][obstacle.coords.y] = "";
           inventory.add(obstacle.image)
         }
@@ -84,8 +82,6 @@ export class Player {
           this.collisions.left = true;
         }
         else if (obstacle.obstacleType === "item") {
-          console.log(obstacle.coords.x)
-          console.log(obstacle.coords.y)
           map.mapForeground[obstacle.coords.x][obstacle.coords.y] = "";
           inventory.add(obstacle.image)
         }
@@ -134,13 +130,14 @@ export class Player {
 
 
   draw(ctx) {
-    if (this.direction === "forward" && this.state === "moving" && this.currentFrameIndex!== 2){
+    if (this.direction === "forward" && this.state === "moving" && this.currentFrameIndex !== 2) {
       this.size.y = 96
     }
-    else{
+    else {
       this.size.y = 92
     }
     ctx.drawImage(this.image, this.position.x, this.position.y, this.size.x, this.size.y)
+    inventory.items(ctx)
   }
 
   makeHitbox(ctx) {
@@ -184,5 +181,5 @@ export class Player {
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]]
   }
 
-  
+
 }
