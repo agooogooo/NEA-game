@@ -170,7 +170,7 @@ function canvasMovement() {
 function drawUI() {
   ctx.font = "30px Comic Sans MS"
   ctx.fillStyle = "#424ef5"
-  ctx.fillText(`Time: ${elapsedTime}s`, -100 + player.position.x, -200 + player.position.y)
+  ctx.fillText(`Time: ${elapsedTime}s, ${Math.floor(mousePos.x)},${Math.floor(mousePos.y)}, ${Math.floor(player.position.x)},${Math.floor(player.position.y)}`, -100 + player.position.x, -200 + player.position.y)
 }
 function draw() {
   map.drawBackground(ctx)

@@ -12,7 +12,7 @@ export class Inventory {
 
 
     this.inventory = [
-      ["", "", "", "", "", "", "", "", "", "", ""],
+      [ this.loadedImages["images/other/bow.png"], "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
@@ -62,25 +62,19 @@ export class Inventory {
   items(ctx){
     if (this.heldItem === this.loadedImages["images/other/bow.png"]){
 
-      // const X =  (this.playerPos.x + 30) -this.mousePos.x
-      // const Y =  (this.playerPos.y + 46) -this.mousePos.y 
-      // this.angle = Math.atan(X, Y)
+        const X = this.mousePos.x - 600
+        const Y = this.mousePos.y - 346
+        this.angle = Math.atan2(Y , X)
 
-      this.angle -= 0.1
-      
-      const bowX = (this.playerPos.x + 30) + Math.cos(this.angle) * 100 
-      const bowY = (this.playerPos.y + 46) + Math.sin(this.angle) * 100 
+      const bowX = 600 + Math.cos(this.angle) * 100 
+      const bowY = 346 + Math.sin(this.angle) * 100 
       
       
       ctx.save();
-      ctx.translate(bowX , bowY );
+      ctx.translate(bowX +this.playerPos.x-570, bowY +this.playerPos.y-300);
       ctx.rotate(this.angle + 3*(Math.PI) / 4);
       ctx.drawImage(this.loadedImages["images/other/bow.png"], -22.5, -22.5, 45, 45);
       ctx.restore();
-
-
-
-
     }
   }
 }
