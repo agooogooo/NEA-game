@@ -19,3 +19,12 @@ Patrol State: The enemy moves along a predefined path or randomly patrols an are
 Chase State: If the enemy spots the player, it moves toward the player.
 Flee State: If the enemy is damaged or scared, it moves away from the player.
 Use timers or conditions (like proximity to the player or obstacles) to transition between these states.
+
+add a raneg for the bow-✅
+add collisions for the projectiles-✅
+create enemies-✅
+make them move
+have the enemies have health
+have the player have health
+have the enemies attack
+levels
