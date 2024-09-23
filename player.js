@@ -1,5 +1,5 @@
 // imports map and inventory so that they can be used in this file
-import { map } from "./script.js"
+import { map, player } from "./script.js"
 import { inventory } from "./script.js"
 
 export class Player {
@@ -16,7 +16,7 @@ export class Player {
       right: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
       back: ["images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerBack.png"]
     }
-    this.image = this.loadedImages["images/other/tree.png"]
+    this.image = this.loadedImages["images/player/been.png"]
     this.hitboxSize = { x: 40, y: 40 }
     this.hitboxPosition = { x: 0, y: 0 }
     this.collisions = { up: false, down: false, left: false, right: false }
@@ -37,7 +37,7 @@ export class Player {
 
     // Timer to handle random changes every 3-10 seconds
     const changeStateDuration = 300 + Math.random() * 1400; // Random between 3 and 10 seconds
-
+    
     for (const enemy of map.enemies) {
       if (!enemy.lastStateChangeTime || currentTime - enemy.lastStateChangeTime > changeStateDuration) {
         enemy.lastStateChangeTime = currentTime;
@@ -46,8 +46,8 @@ export class Player {
         switch (enemy.state) {
           case "patrol":
             // Random velocity between -10 and 10 for both x and y
-            enemy.velocity.x = (Math.random() * 2 - 1); // Random value between -10 and 10
-            enemy.velocity.y = (Math.random() * 2 - 1); // Random value between -10 and 10
+            enemy.velocity.x = (Math.random() * 5 - 1); // Random value between -10 and 10
+            enemy.velocity.y = (Math.random() * 5 - 1); // Random value between -10 and 10
             break;
 
           case "chase":
@@ -56,8 +56,8 @@ export class Player {
             let randomAngleDeviation = (Math.random() * (Math.PI / 6)) - (Math.PI / 12); // Deviation within +/- 15 degrees
             let adjustedAngle = angleToPlayer + randomAngleDeviation;
 
-            enemy.velocity.x = Math.cos(adjustedAngle) * 1; // Move toward player with speed 10
-            enemy.velocity.y = Math.sin(adjustedAngle) * 1;
+            enemy.velocity.x = Math.cos(adjustedAngle) * 5; // Move toward player with speed 10
+            enemy.velocity.y = Math.sin(adjustedAngle) * 5;
             break;
 
           case "flee":
@@ -66,8 +66,8 @@ export class Player {
             let randomAngle = (Math.random() * (Math.PI / 6)) - (Math.PI / 12); // Deviation within +/- 15 degrees
             let adjustedAngle2 = angleFromPlayer + randomAngle;
 
-            enemy.velocity.x = Math.cos(adjustedAngle2) * -3; // Move toward player with speed 10
-            enemy.velocity.y = Math.sin(adjustedAngle2) * -3;
+            enemy.velocity.x = Math.cos(adjustedAngle2) * -15; // Move toward player with speed 10
+            enemy.velocity.y = Math.sin(adjustedAngle2) * -15
             break;
 
           case "idle":
@@ -106,8 +106,13 @@ export class Player {
           if (obstacle.checkCollision(projectile.getHitbox(), enemy.hitboxPosition)) {
             inventory.projectiles.splice(i, 1);
             enemy.health -= 5;
-            break;
           }
+          
+        }
+      }
+      for (const enemy of map.enemies){
+        if (obstacle.checkCollision(this.hitboxPosition, enemy.hitboxPosition)){
+          this.health -= 1
         }
       }
     }
@@ -221,7 +226,7 @@ export class Player {
       let enemy = map.enemies[i]
       ctx.drawImage(enemy.image, enemy.position.x, enemy.position.y, enemy.size.x, enemy.size.y)
       enemy.makeHitbox(ctx)
-      ctx.fillText(`${enemy.health}, ${enemy.state}`,enemy.position.x,  enemy.position.y)
+      ctx.fillText(`${enemy.health}`,enemy.position.x,  enemy.position.y)
     }
     inventory.items(ctx)
   }
@@ -240,37 +245,40 @@ export class Player {
   
   level() {
     // way to easily change the background between levels or when moving to a different place
-    map.mapForeground =
-      [["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]]
+    if (map.enemies.length ===0){
+      map.mapForeground =
+        [["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]]
+    }
+
   }
 
 
