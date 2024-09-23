@@ -36,9 +36,10 @@ export class Player {
     this.position.y += this.velocity.y;
 
     // Timer to handle random changes every 3-10 seconds
-    const changeStateDuration = 300 + Math.random() * 1400; // Random between 3 and 10 seconds
+     // Random between 3 and 10 seconds
     
     for (const enemy of map.enemies) {
+      const changeStateDuration = 300 + Math.random() * 1400
       if (!enemy.lastStateChangeTime || currentTime - enemy.lastStateChangeTime > changeStateDuration) {
         enemy.lastStateChangeTime = currentTime;
 
@@ -46,18 +47,18 @@ export class Player {
         switch (enemy.state) {
           case "patrol":
             // Random velocity between -10 and 10 for both x and y
-            enemy.velocity.x = (Math.random() * 5 - 1); // Random value between -10 and 10
-            enemy.velocity.y = (Math.random() * 5 - 1); // Random value between -10 and 10
+            enemy.velocity.x = (Math.random() * 2 - 1); // Random value between -10 and 10
+            enemy.velocity.y = (Math.random() * 2 - 1); // Random value between -10 and 10
             break;
 
           case "chase":
-            // Move toward the player but with random deviation
+            //move toward the player but with random angles
             let angleToPlayer = Math.atan2(this.position.y - enemy.position.y, this.position.x - enemy.position.x);
-            let randomAngleDeviation = (Math.random() * (Math.PI / 6)) - (Math.PI / 12); // Deviation within +/- 15 degrees
+            let randomAngleDeviation = (Math.random() * (Math.PI / 3)) - (Math.PI / 6); //deviation within +/- 30 degrees
             let adjustedAngle = angleToPlayer + randomAngleDeviation;
 
-            enemy.velocity.x = Math.cos(adjustedAngle) * 5; // Move toward player with speed 10
-            enemy.velocity.y = Math.sin(adjustedAngle) * 5;
+            enemy.velocity.x = Math.cos(adjustedAngle) * 1; //move toward player with speed 10
+            enemy.velocity.y = Math.sin(adjustedAngle) * 1; //same in y direction
             break;
 
           case "flee":
@@ -66,8 +67,8 @@ export class Player {
             let randomAngle = (Math.random() * (Math.PI / 6)) - (Math.PI / 12); // Deviation within +/- 15 degrees
             let adjustedAngle2 = angleFromPlayer + randomAngle;
 
-            enemy.velocity.x = Math.cos(adjustedAngle2) * -15; // Move toward player with speed 10
-            enemy.velocity.y = Math.sin(adjustedAngle2) * -15
+            enemy.velocity.x = Math.cos(adjustedAngle2) * -3; // Move toward player with speed 10
+            enemy.velocity.y = Math.sin(adjustedAngle2) * -3
             break;
 
           case "idle":
