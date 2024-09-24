@@ -25,15 +25,21 @@ export class Obstacle {
     ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y);
   }
 
-  checkCollision(a, b) {//checks to see if there is any overlap between the hitboxes
-    const playerHitbox = a;
-    const obstacleHitbox = b;
+  checkCollision(a, b) {//checks to see if there is any overlap between the hitboxes of the 2 inputted parameters
+   
+
+    // return (
+    //   playerHitbox.x < obstacleHitbox.x + this.hitboxSize.x &&
+    //   playerHitbox.x + player.hitboxSize.x > obstacleHitbox.x &&
+    //   playerHitbox.y < obstacleHitbox.y + this.hitboxSize.y &&
+    //   playerHitbox.y + player.hitboxSize.y > obstacleHitbox.y
+    // )//returns true or false depending on if a collision has happened or not
 
     return (
-      playerHitbox.x < obstacleHitbox.x + this.hitboxSize.x &&
-      playerHitbox.x + player.hitboxSize.x > obstacleHitbox.x &&
-      playerHitbox.y < obstacleHitbox.y + this.hitboxSize.y &&
-      playerHitbox.y + player.hitboxSize.y > obstacleHitbox.y
-    );//returns true or false depending on if a collision has happened or not
+      a.hitboxPosition.x < b.hitboxPosition.x + b.hitboxSize.x &&
+      a.hitboxPosition.x + a.hitboxSize.x > b.hitboxPosition.x &&
+      a.hitboxPosition.y < b.hitboxPosition.y + b.hitboxSize.y &&
+      a.hitboxPosition.y + a.hitboxSize.y > b.hitboxPosition.y
+    )
   }
 }

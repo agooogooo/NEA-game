@@ -83,8 +83,8 @@ export class Inventory {
         // Create a new projectile at the exact position of the bow
         const projectile = new Projectile(
           this.loadedImages["images/other/tree.png"],
-          bowX + this.playerPos.x - 570,
-          bowY + this.playerPos.y - 300,
+          {x:bowX + this.playerPos.x - 570,
+          y:bowY + this.playerPos.y - 300},
           this.angle
         );
         this.projectiles.push(projectile)
@@ -111,31 +111,29 @@ export class Inventory {
 }
 
 export class Projectile{
-  constructor(image, x, y, angle) {
+  constructor(image, position, angle) {
     this.image = image
-    this.x = x
-    this.y = y
-    this.startX = x; // Store the starting position
-    this.startY = y;
+    this.hitboxPosition = position
+    this.startX = position.x // Store the starting position
+    this.startY = position.y
     this.angle = angle
     this.speed = 10 // Speed of the projectile
 
     // Define hitbox dimensions
-    this.hitboxWidth = 30
-    this.hitboxHeight = 30
+    this.hitboxSize = {x:30, y:30}
     this.maxDistance = 500;
   }
 
   // Update the projectile's position based on its angle and speed
   update() {
-    this.x += Math.cos(this.angle) * this.speed
-    this.y += Math.sin(this.angle) * this.speed
+    this.hitboxPosition.x += Math.cos(this.angle) * this.speed
+    this.hitboxPosition.y += Math.sin(this.angle) * this.speed
   }
 
   // Draw the projectile and its hitbox on the canvas
   draw(ctx) {
     ctx.save()
-    ctx.translate(this.x, this.y)
+    ctx.translate(this.hitboxPosition.x, this.hitboxPosition.y)
     ctx.rotate(this.angle + 3 * (Math.PI) / 4)
 
     // Draw the projectile image
@@ -145,10 +143,10 @@ export class Projectile{
     ctx.strokeStyle = 'red'
     ctx.lineWidth = 2
     ctx.strokeRect(
-      -this.hitboxWidth / 2,
-      -this.hitboxHeight / 2,
-      this.hitboxWidth,
-      this.hitboxHeight
+      -this.hitboxSize.x / 2,
+      -this.hitboxSize.y / 2,
+      this.hitboxSize.x,
+      this.hitboxSize.y
     );
 
     ctx.restore()
@@ -158,7 +156,7 @@ export class Projectile{
   isOutOfBounds() {
     // Calculate the distance traveled using the Pythagorean theorem
     const distanceTraveled = Math.sqrt(
-      Math.pow(this.x - this.startX, 2) + Math.pow(this.y - this.startY, 2)
+      Math.pow(this.hitboxPosition.x - this.startX, 2) + Math.pow(this.hitboxPosition.y - this.startY, 2)
     );
 
     // Return true if the projectile has traveled farther than maxDistance
@@ -168,10 +166,10 @@ export class Projectile{
   // Get the hitbox for collision detection
   getHitbox() {
     return {
-      x: this.x - this.hitboxWidth / 2,
-      y: this.y - this.hitboxHeight / 2,
-      width: this.hitboxWidth,
-      height: this.hitboxHeight,
+      x: this.hitboxPosition.x - this.hitboxPosition.x / 2,
+      y: this.hitboxPosition.y - this.hitboxPosition.y / 2,
+      width: this.hitboxPosition.x,
+      height: this.hitboxPosition.y,
     }
   }
 }

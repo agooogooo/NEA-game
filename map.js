@@ -159,7 +159,7 @@ export class Map {
     let distance = 0
     let x = enemy.position.x - player.position.x
     let y = enemy.position.y - player.position.y
-    distance = Math.sqrt(x * x + y * y)
+    distance = Math.sqrt(x*x+y*y)
     if (distance > 1999){
       enemy.state = "idle"
     }else if(distance >499 && distance < 2000){
@@ -174,7 +174,7 @@ export class Map {
   }
 
   getObstacles() {
-    return this.obstacles;
+    return this.obstacles
   }
 
   create() {//randomly fills the map array with number from 0-3 so that it can be different every time

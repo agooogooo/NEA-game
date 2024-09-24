@@ -1,30 +1,12 @@
-finish inventory and items
-item functions and item ids
-add enemies
-add levels
 
-goals by wednesday:
-add item functions and ids
-do a lot more drawings of character movements, all of forest with paths
-all level markers
-
-
-enemy ai:
-3. State-Based Movement with Randomized Transitions
-Create different states for the enemy, such as "Idle," "Patrol," "Chase," and "Flee." These states define specific behaviors, and you can randomly transition between them based on probabilities or triggers.
-
-Implementation Idea:
-Idle State: The enemy stays still or moves slightly within a small area.
-Patrol State: The enemy moves along a predefined path or randomly patrols an area.
-Chase State: If the enemy spots the player, it moves toward the player.
-Flee State: If the enemy is damaged or scared, it moves away from the player.
-Use timers or conditions (like proximity to the player or obstacles) to transition between these states.
-
-add a raneg for the bow-✅
+add a range for the bow-✅
 add collisions for the projectiles-✅
 create enemies-✅
-make them move
-have the enemies have health
-have the player have health
-have the enemies attack
+make them move-✅
+have the enemies have health-✅
+change the collisions a bit to input the thing not only the hitbox-✅
+have the player have health that works and is on a timer for how much damage can be taken-✅
+have the enemies attack-✅
+enemy collisions
+animate enemies
 levels
