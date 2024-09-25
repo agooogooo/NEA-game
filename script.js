@@ -11,7 +11,6 @@ let keysPressed = [];
 export let player;
 export let map;
 export let inventory
-let enemy
 
 //sets a timer
 let startTime = Date.now();
@@ -20,7 +19,7 @@ let elapsedTime = 0;
 export let mouseDown = false
 
 // stores all of the images so they can be loaded
-const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png"];
+const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png"]
 
 const playerImages = {
   forward: ["images/player/been.png"],
@@ -110,68 +109,65 @@ addEventListener("keyup", ({ key }) => {
 });
 
 function canvasMovement() { //controls player movement and direction changing depending on inputs
-  let maxVelocity = 0;
+  let maxVelocity = 0
 
   //the number of pixels that the canvas will be translated each frame
-  let translateX = 0; 
-  let translateY = 0;
-
-
-  if (keysPressed.includes("w")) {
-    player.direction = "back"//sets the players direction depending on the keys pressd
-    if (!player.collisions.up) {//checks if there is a collision in that direction
-      player.velocity.y = -5; // sets how much the player should move
-      translateY = 5; // sets how much the canvas should move
-    } else {
-      player.velocity.y = Math.min(player.velocity.y, maxVelocity); // otherwise makes sure there can't be any movement
-      translateY = 0;
-    }
-  } else if (keysPressed.includes("s")) {//repeats for all directions
-    player.direction = "forward"
-    if (!player.collisions.down) {
-      player.velocity.y = 5;
-      translateY = -5;
-    } else {
-      player.velocity.y = Math.max(player.velocity.y, maxVelocity);
-      translateY = 0;
-    }
-  } else {
-    player.velocity.y = 0;
-    translateY = 0;
-  }
-  if ((keysPressed.includes("s")) && (keysPressed.includes("w"))) {//makes sure if the player is trying to go up and down then they just stay still
-    player.velocity.y = 0;
-    translateY = 0;
-  }
-
+  let translateX = 0
+  let translateY = 0
 
   if (keysPressed.includes("a")) {
     player.direction = "left"
     if (!player.collisions.left) {
-      player.velocity.x = -5;
-      translateX = 5;
+      player.velocity.x = -5
+      translateX = 5
     } else {
-      player.velocity.x = Math.min(player.velocity.x, maxVelocity);
-      translateX = 0;
+      player.velocity.x = Math.min(player.velocity.x, maxVelocity)
+      translateX = 0
     }
   } else if (keysPressed.includes("d")) {
     player.direction = "right"
     if (!player.collisions.right) {
-      player.velocity.x = 5;
-      translateX = -5;
+      player.velocity.x = 5
+      translateX = -5
     } else {
-      player.velocity.x = Math.max(player.velocity.x, maxVelocity);
-      translateX = 0;
+      player.velocity.x = Math.max(player.velocity.x, maxVelocity)
+      translateX = 0
     }
   } else {
-    player.velocity.x = 0;
-    translateX = 0;
+    player.velocity.x = 0
+    translateX = 0
   }
   if ((keysPressed.includes("a")) && (keysPressed.includes("d"))) {//makes sure if they player tries to go left and right at the same time they stay still
-    player.velocity.x = 0;
-    translateX = 0;
+    player.velocity.x = 0
+    translateX = 0
   }
 
+  if (keysPressed.includes("w")) {
+    player.direction = "back"//sets the players direction depending on the keys pressd
+    if (!player.collisions.up) {//checks if there is a collision in that direction
+      player.velocity.y = -5 // sets how much the player should move
+      translateY = 5 // sets how much the canvas should move
+    } else {
+      player.velocity.y = Math.min(player.velocity.y, maxVelocity); // otherwise makes sure there can't be any movement
+      translateY = 0
+    }
+  } else if (keysPressed.includes("s")) {//repeats for all directions
+    player.direction = "forward"
+    if (!player.collisions.down) {
+      player.velocity.y = 5
+      translateY = -5
+    } else {
+      player.velocity.y = Math.max(player.velocity.y, maxVelocity)
+      translateY = 0
+    }
+  } else {
+    player.velocity.y = 0
+    translateY = 0
+  }
+  if ((keysPressed.includes("s")) && (keysPressed.includes("w"))) {//makes sure if the player is trying to go up and down then they just stay still
+    player.velocity.y = 0
+    translateY = 0
+  }
   ctx.translate(translateX, translateY);//translates the canvas after the movement is set
 }
 
@@ -199,7 +195,7 @@ function draw() {
 function update(timestamp) {
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
   canvasMovement();
-  player.update(map.obstacles, timestamp);
+  player.update(map.obstacles, timestamp, ctx);
   map.update()
   inventory.position.x = player.position.x - 170;
   inventory.position.y = player.position.y - 180;

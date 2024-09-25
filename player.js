@@ -1,5 +1,5 @@
 // imports map and inventory so that they can be used in this file
-import { map, player } from "./script.js"
+import { map } from "./script.js"
 import { inventory } from "./script.js"
 
 export class Player {
@@ -26,8 +26,9 @@ export class Player {
     this.currentFrameIndex = 0
     this.frameDuration = 120
     this.lastFrameChangeTime = 0
+    //other attributes
     this.person = person
-    this.lastStateChangeTime= 0
+    this.lastStateChangeTime = 0
     this.lastDamageTime = 0
   }
 
@@ -36,10 +37,9 @@ export class Player {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    // Timer to handle random changes every 3-10 seconds
     for (const enemy of map.enemies) {
-      const changeStateDuration = 500 + Math.random() * 1500;  // Random between 3 and 10 seconds
-      if (!enemy.lastStateChangeTime || currentTime - enemy.lastStateChangeTime > changeStateDuration) {
+      const changeStateDuration = 500 + Math.random() * 1500//timer changes the velocity of the enemy randomly every 0.5 to 2 seconds
+      if (!enemy.lastStateChangeTime || currentTime - enemy.lastStateChangeTime > changeStateDuration) {//only changes if it has been the set amount of time
         enemy.lastStateChangeTime = currentTime;
 
         //enemy movement based on state
@@ -50,46 +50,51 @@ export class Player {
             enemy.velocity.y = (Math.random() * 2 - 1); // Random value between -2 and 2
             break;
 
-          case "chase":
-            //move toward the player but with random angles
+          case "chase"://move towards the player at random angles
             let angleToPlayer = Math.atan2(this.position.y - enemy.position.y, this.position.x - enemy.position.x);
             let randomAngleDeviation = (Math.random() * (Math.PI / 3)) - (Math.PI / 6); //deviation within +/- 30 degrees
-            let adjustedAngle = angleToPlayer + randomAngleDeviation;
+            let adjustedAngle = angleToPlayer + randomAngleDeviation
 
             enemy.velocity.x = Math.cos(adjustedAngle) * 2; //move toward player with speed 2
             enemy.velocity.y = Math.sin(adjustedAngle) * 2; //same in y direction
             break;
 
-          case "flee":
-            // Move away from the player with random deviation
+          case "flee"://move away from the player at random angles
             let angleFromPlayer = Math.atan2(enemy.position.y - this.position.y, enemy.position.x - this.position.x);
             let randomFleeAngleDeviation = (Math.random() * (Math.PI / 3)) - (Math.PI / 6); //deviation within +/- 15 degrees
-            let adjustedFleeAngle = angleFromPlayer + randomFleeAngleDeviation;
+            let adjustedFleeAngle = angleFromPlayer + randomFleeAngleDeviation
 
-            enemy.velocity.x = Math.cos(adjustedFleeAngle) * 5; // Move away from player with speed 3
+            enemy.velocity.x = Math.cos(adjustedFleeAngle) * 5; //mve away from player with speed 5
             enemy.velocity.y = Math.sin(adjustedFleeAngle) * 5;
             break;
 
-          case "idle":
-            // Set velocity to 0 if idle
-            enemy.velocity.x = 0;
-            enemy.velocity.y = 0;
+          case "idle"://set velocity to 0 if idle
+            enemy.velocity.x = 0
+            enemy.velocity.y = 0
             break;
+        }
+        if (enemy.velocity.y > 0) {
+          enemy.direction = "back"
+          enemy.image = this.loadedImages["images/player/been.png"]
+        }
+        if (enemy.velocity.y < 0) {
+          enemy.direction = "forward"
+          enemy.image = this.loadedImages["images/player/playerBack.png"]
         }
       }
 
-      // Update enemy position based on velocity
+      //update enemy position
       enemy.position.x += enemy.velocity.x;
       enemy.position.y += enemy.velocity.y;
 
-      // Prevent enemy from moving beyond map boundaries (X direction)
+      //stop enemy from leaving the map in x direction
       if (enemy.position.x < -75) {
         enemy.position.x = -75;
       } else if (enemy.position.x > 1800) {
         enemy.position.x = 1800;
       }
 
-      // Prevent enemy from moving beyond map boundaries (Y direction)
+      //stop enemy from leaving the map in y direction
       if (enemy.position.y < -120) {
         enemy.position.y = -120;
       } else if (enemy.position.y > 1100) {
@@ -97,24 +102,23 @@ export class Player {
       }
     }
 
-    // Resets the collisions
+    //resets the collisions
     this.collisions = { up: false, down: false, left: false, right: false };
 
-    // Checks collisions on all obstacles
+    //checks collisions on all obstacles
     for (const obstacle of obstacles) {
       if (obstacle.checkCollision(this, obstacle)) {
         this.handleCollision(obstacle);
       }
 
-      // Projectile collision checks
+      //check projectile collision with obstacle
       for (let i = inventory.projectiles.length - 1; i >= 0; i--) {
         const projectile = inventory.projectiles[i];
-        for (const obstacle of obstacles) {
-          if (obstacle.obstacleType === "collide" && obstacle.checkCollision(projectile, obstacle)) {
-            inventory.projectiles.splice(i, 1);
-            break; // Exit loop after removing the projectile
-          }
+        if (obstacle.obstacleType === "collide" && obstacle.checkCollision(projectile, obstacle)) {
+          inventory.projectiles.splice(i, 1);
+          break; // Exit loop after removing the projectile
         }
+
         // Check for collision with enemies
         for (const enemy of map.enemies) {
           if (obstacle.checkCollision(projectile, enemy)) {
@@ -126,20 +130,16 @@ export class Player {
       // Player collision with enemies
       for (const enemy of map.enemies) {
         // Initialize lastDamageTime for each enemy if it doesn't exist
-        if (!enemy.lastDamageTime) {
+        if (!enemy.lastDamageTime && (currentTime - enemy.lastDamageTime > 1000)) {
           enemy.lastDamageTime = 0;
-        }
-
-        // Check if player collides with the enemy and if the damage cooldown (1 second) has passed
-        if (obstacle.checkCollision(this, enemy) && (currentTime - enemy.lastDamageTime > 1000)) {
-          this.health -= 1;  // Player takes damage
-          enemy.lastDamageTime = currentTime;  // Update the last damage time
+          this.health -= 1  //player takes damage
+          enemy.lastDamageTime = currentTime //update the last damage time    
         }
       }
     }
 
-    
-    
+
+
     // Set player state based on velocity for animations
     if (this.velocity.x === 0 && this.velocity.y === 0) {
       this.state = "idle";
@@ -150,12 +150,12 @@ export class Player {
     // Handle player animations
     if (this.state === "moving") {
       if (currentTime - this.lastFrameChangeTime >= this.frameDuration) {
-        this.lastFrameChangeTime = currentTime;
-        this.currentFrameIndex = (this.currentFrameIndex + 1) % this.images[this.direction].length;
-        this.image = this.loadedImages[this.images[this.direction][this.currentFrameIndex]];
+        this.lastFrameChangeTime = currentTime
+        this.currentFrameIndex = (this.currentFrameIndex + 1) % this.images[this.direction].length
+        this.image = this.loadedImages[this.images[this.direction][this.currentFrameIndex]]
       }
     } else if (this.state === "idle") {
-      this.image = this.loadedImages[this.images[this.direction][2]];
+      this.image = this.loadedImages[this.images[this.direction][2]]
     }
 
     // Set the held item in the inventory
@@ -245,13 +245,18 @@ export class Player {
     else {
       this.size.y = 92
     }
-    ctx.drawImage(this.image, this.position.x, this.position.y, this.size.x, this.size.y)
-    for (let i = 0; i < map.enemies.length; i++){
+    for (let i = 0; i < map.enemies.length; i++) {
       let enemy = map.enemies[i]
       ctx.drawImage(enemy.image, enemy.position.x, enemy.position.y, enemy.size.x, enemy.size.y)
       enemy.makeHitbox(ctx)
-      ctx.fillText(`${enemy.health}`,enemy.position.x,  enemy.position.y)
+      ctx.textAlign = "center"
+      ctx.fillText(`${enemy.health}`, enemy.position.x + 30, enemy.position.y)
+      if (enemy.state === "flee") {
+        ctx.fillText(`AHHHHHHH`, enemy.position.x + 30, enemy.position.y - 30)
+      }
     }
+
+    ctx.drawImage(this.image, this.position.x, this.position.y, this.size.x, this.size.y)
     inventory.items(ctx)
   }
 
@@ -266,10 +271,10 @@ export class Player {
 
 
 
-  
+
   level() {
     // way to easily change the background between levels or when moving to a different place
-    if (map.enemies.length ===0){
+    if (map.enemies.length === 0) {
       map.mapForeground =
         [["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
         ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],

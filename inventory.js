@@ -25,7 +25,7 @@ export class Inventory {
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
-    ];
+    ]
     this.heldItem = this.inventory[0][0]
   }
 
@@ -83,8 +83,10 @@ export class Inventory {
         // Create a new projectile at the exact position of the bow
         const projectile = new Projectile(
           this.loadedImages["images/other/tree.png"],
-          {x:bowX + this.playerPos.x - 570,
-          y:bowY + this.playerPos.y - 300},
+          {
+            x: bowX + this.playerPos.x - 570,
+            y: bowY + this.playerPos.y - 300
+          },
           this.angle
         );
         this.projectiles.push(projectile)
@@ -106,11 +108,11 @@ export class Inventory {
         this.projectiles.splice(index, 1);
       }
     })
-    
+
   }
 }
 
-export class Projectile{
+export class Projectile {
   constructor(image, position, angle) {
     this.image = image
     this.hitboxPosition = position
@@ -120,7 +122,7 @@ export class Projectile{
     this.speed = 10 // Speed of the projectile
 
     // Define hitbox dimensions
-    this.hitboxSize = {x:30, y:30}
+    this.hitboxSize = { x: 30, y: 30 }
     this.maxDistance = 500;
   }
 
@@ -142,28 +144,21 @@ export class Projectile{
     // Draw the hitbox 
     ctx.strokeStyle = 'red'
     ctx.lineWidth = 2
-    ctx.strokeRect(
-      -this.hitboxSize.x / 2,
-      -this.hitboxSize.y / 2,
-      this.hitboxSize.x,
-      this.hitboxSize.y
-    );
+    ctx.strokeRect(-this.hitboxSize.x / 2, -this.hitboxSize.y / 2, this.hitboxSize.x, this.hitboxSize.y)
 
     ctx.restore()
   }
 
-  // Check if the projectile is out of bounds
+  //check if the projectile is out of the range that it is in
   isOutOfBounds() {
-    // Calculate the distance traveled using the Pythagorean theorem
-    const distanceTraveled = Math.sqrt(
-      Math.pow(this.hitboxPosition.x - this.startX, 2) + Math.pow(this.hitboxPosition.y - this.startY, 2)
-    );
+    //calculate the distance traveled using pythagoras
+    const distanceTraveled = Math.sqrt(Math.pow(this.hitboxPosition.x - this.startX, 2) + Math.pow(this.hitboxPosition.y - this.startY, 2));
 
-    // Return true if the projectile has traveled farther than maxDistance
+    //return true if the projectile has gone further than the maxDistance
     return distanceTraveled > this.maxDistance;
   }
 
-  // Get the hitbox for collision detection
+  //get the hitbox
   getHitbox() {
     return {
       x: this.hitboxPosition.x - this.hitboxPosition.x / 2,

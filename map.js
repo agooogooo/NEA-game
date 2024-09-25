@@ -1,6 +1,6 @@
 import { Obstacle } from "./obstacle.js"
 import { Player } from "./player.js"
-import {player} from "./script.js"
+import { player } from "./script.js"
 
 export class Map {
   constructor(loadedImages) {
@@ -41,21 +41,21 @@ export class Map {
     this.mapForeground = //creates an array for the foreground which gets changed depending on the level
       [["", "", "", "", "", "", "", "", "r", "", "", "", "", "i", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "i", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "39", "", "", "", "", "", "", "i", "", "", "39", "", "", "", ""],
+      ["", "", "", "", "", "", "", "", "", "", "", "", "i", "", "", "32", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["11", "", "", "", "", "", "", "", "i", "", "", "r", "", "w", "", "", "", "", "", ""],
       ["", "", "", "", "", "r", "r", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "r", "", "i", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "i", "r", "", "", "", "", ""],
       ["12", "", "w", "w", "", "", "", "", "", "", "", "r", "", "", "", "", "", "", "w", ""],
-      ["", "", "39", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "39", ""],
+      ["", "", "32", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "32", ""],
       ["", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["13", "", "", "", "", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["14", "", "", "", "", "", "", "39", "", "", "", "", "", "", "", "", "", "", "", ""],
+      ["14", "", "", "", "", "", "", "32", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", "", "", "w", "", ""],
       ["", "", "", "w", "", "", "", "", "", "w", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "w", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
@@ -64,16 +64,16 @@ export class Map {
       ["", "", "", "w", "", "", "", "w", "w", "", "r", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "w", "r", "", "", "", "", "", "", "", "", "", "w", "", "", "", "", ""],
       ["", "", "", "w", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "w", "", "", "", "", "39", "", "", "", "", "", "", "", "", "", "", ""],
+      ["", "", "", "w", "", "", "", "", "32", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "w", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "w", "39", "", "", "", "", "", "", "r", "", "", "", "", "", "", "r", ""],
+      ["", "", "", "w", "32", "", "", "", "", "", "", "r", "", "", "", "", "", "", "r", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "39", "", "", "", ""]]
+      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "32", "", "", "", ""]]
     this.size = { x: 64, y: 64 }
     this.obstacles = []//adds an obstacles array to deal with any collisions later on
     this.enemies = []
   }
-  
+
   drawBackground(ctx) {
     for (let i = 0; i < this.mapBackground.length; i++) {//goes through every tile in the map to draw it with a random drawing which is created at the start
       for (let j = 0; j < this.mapBackground[i].length; j++) {
@@ -117,7 +117,7 @@ export class Map {
         if (this.mapForeground[i][j][0] === "1") {
           let obstacle = new Obstacle({ x: this.newPosition.x, y: this.newPosition.y }, { x: 100, y: 100 }, this.loadedImages["images/other/markers/level_marker.png"], { x: 100, y: 100 }, "level", { x: this.position.x, y: this.position.y }, this.mapForeground[i][j][1]);
           ctx.drawImage(obstacle.image, obstacle.position.x, obstacle.position.y, obstacle.size.x, obstacle.size.y);
-          ctx.fillStyle = "#fc0f03" 
+          ctx.fillStyle = "#fc0f03"
           ctx.font = "bold 48px serif"
           ctx.fillText(obstacle.level, obstacle.position.x + 38, obstacle.position.y + 62)
           //if it is a level marker then it also writes the level number
@@ -132,41 +132,41 @@ export class Map {
         }
         if (this.mapForeground[i][j] > 30 && this.mapForeground[i][j] < 40) {
           console.log(this.mapForeground[i][j])
-            this.mapForeground[i][j] -= 1
+          this.mapForeground[i][j] -= 1
           let enemy = new Player({ x: this.newPosition.x, y: this.newPosition.y }, this.loadedImages, ctx, "enemy")
           this.enemies.push(enemy)
           console.log(this.enemies)
-          }
         }
       }
     }
-  
-  update(){
+  }
+
+  update() {
     for (let i = 0; i < this.enemies.length; i++) {
       console.log(this.enemies[i])
-        if (this.enemies[i].health === 0) {
-            this.enemies.splice(i, 1)
-            i--
-            if (i === -1){
-              break
-            }
+      if (this.enemies[i].health === 0) {
+        this.enemies.splice(i, 1)
+        i--
+        if (i === -1) {
+          break
         }
+      }
       this.enemies[i].state = this.chooseEnemyState(player, this.enemies[i])
       console.log(this.enemies[i].state)
     }
   }
-  chooseEnemyState(player, enemy){
+  chooseEnemyState(player, enemy) {
     let distance = 0
     let x = enemy.position.x - player.position.x
     let y = enemy.position.y - player.position.y
-    distance = Math.sqrt(x*x+y*y)
-    if (distance > 1999){
+    distance = Math.sqrt(x * x + y * y)
+    if (distance > 1999) {
       enemy.state = "idle"
-    }else if(distance >499 && distance < 2000){
+    } else if (distance > 499 && distance < 2000) {
       enemy.state = "patrol"
-    }else if(distance < 500){
+    } else if (distance < 500) {
       enemy.state = "chase"
-    }if(enemy.health < 20){
+    } if (enemy.health < 20) {
       enemy.state = "flee"
     }
     console.log(enemy.state)
