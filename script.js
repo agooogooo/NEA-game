@@ -176,7 +176,7 @@ function canvasMovement() { //controls player movement and direction changing de
 function drawUI() {
   ctx.font = "30px Comic Sans MS"
   ctx.fillStyle = "#424ef5"
-  ctx.fillText(`Time: ${elapsedTime}s, ${Math.floor(mousePos.x)},${Math.floor(mousePos.y)}, ${Math.floor(player.position.x)},${Math.floor(player.position.y)}, ${player.health}`, -100 + player.position.x, -200 + player.position.y)
+  ctx.fillText(`Time: ${elapsedTime}s, ${Math.floor(mousePos.x)},${Math.floor(mousePos.y)}, ${Math.floor(player.position.x)},${Math.floor(player.position.y)}, ${player.health}, ${map.enemies.length}, ${player.state}`, -100 + player.position.x, -200 + player.position.y)
 }
 
 // keeps all of the functions for anything that gets drawn onto the canvas
@@ -204,8 +204,14 @@ function update(timestamp) {
 
 // the gameloop which repeats and holds all functions clearing, updating and drawing everything every frame
 function gameloop(timestamp) {
-  ctx.clearRect(-100000, -100000, 10000000, 1000000)
-  update(timestamp)
-  draw()
+  if (player.health === 0){
+    ctx.clearRect(-100000, -100000, 10000000, 1000000)
+  ctx.fillText(`YOU DIED`, player.position.x, player.position.y)
+    player.state ="dead"
+  }
+  else{ctx.clearRect(-100000, -100000, 10000000, 1000000)
+    update(timestamp)
+    draw()
+    }
   requestAnimationFrame(gameloop);
 }

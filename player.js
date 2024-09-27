@@ -1,5 +1,5 @@
 // imports map and inventory so that they can be used in this file
-import { map } from "./script.js"
+import { map, player } from "./script.js"
 import { inventory } from "./script.js"
 
 export class Player {
@@ -37,6 +37,7 @@ export class Player {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
+        
     for (const enemy of map.enemies) {
       const changeStateDuration = 500 + Math.random() * 1500//timer changes the velocity of the enemy randomly every 0.5 to 2 seconds
       if (!enemy.lastStateChangeTime || currentTime - enemy.lastStateChangeTime > changeStateDuration) {//only changes if it has been the set amount of time
@@ -129,11 +130,12 @@ export class Player {
       }
       // Player collision with enemies
       for (const enemy of map.enemies) {
+        if (obstacle.checkCollision(this, enemy)){
         // Initialize lastDamageTime for each enemy if it doesn't exist
-        if (!enemy.lastDamageTime && (currentTime - enemy.lastDamageTime > 1000)) {
-          enemy.lastDamageTime = 0;
+        if (!enemy.lastDamageTime || (currentTime - enemy.lastDamageTime > 1000)) {
           this.health -= 1  //player takes damage
           enemy.lastDamageTime = currentTime //update the last damage time    
+          }
         }
       }
     }
