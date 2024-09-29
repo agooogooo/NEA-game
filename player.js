@@ -1,5 +1,5 @@
 // imports map and inventory so that they can be used in this file
-import { map, player } from "./script.js"
+import { map } from "./script.js"
 import { inventory } from "./script.js"
 
 export class Player {
@@ -11,10 +11,10 @@ export class Player {
     this.direction = "forward"
     this.state = "idle"
     this.images = {//puts all the images in the order that they are animated
-      forward: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
+      forward: ["images/enemy/enemy_frontwalk1.png", "images/enemy/enemy_frontwalk2.png", "images/enemy/enemy_front.png"],
       left: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
       right: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
-      back: ["images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerBack.png"]
+      back: ["images/enemy/enemy_backwalk1.png", "images/enemy/enemy_backwalk2.png", "images/enemy/enemy_back.png"]
     }
     this.image = this.loadedImages["images/player/been.png"]
     this.hitboxSize = { x: 40, y: 40 }
@@ -37,9 +37,14 @@ export class Player {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-        
+
     for (const enemy of map.enemies) {
-      const changeStateDuration = 500 + Math.random() * 1500//timer changes the velocity of the enemy randomly every 0.5 to 2 seconds
+      if (enemy.velocity.y > 0) {
+        enemy.direction = "forward";
+      } else if (enemy.velocity.y < 0) {
+        enemy.direction = "back";
+      }
+      const changeStateDuration = 1500 + Math.random() * 3500//timer changes the velocity of the enemy randomly every 0.5 to 2 seconds
       if (!enemy.lastStateChangeTime || currentTime - enemy.lastStateChangeTime > changeStateDuration) {//only changes if it has been the set amount of time
         enemy.lastStateChangeTime = currentTime;
 
@@ -74,19 +79,14 @@ export class Player {
             enemy.velocity.y = 0
             break;
         }
-        if (enemy.velocity.y > 0) {
-          enemy.direction = "back"
-          enemy.image = this.loadedImages["images/player/been.png"]
-        }
-        if (enemy.velocity.y < 0) {
-          enemy.direction = "forward"
-          enemy.image = this.loadedImages["images/player/playerBack.png"]
-        }
+
       }
 
       //update enemy position
       enemy.position.x += enemy.velocity.x;
       enemy.position.y += enemy.velocity.y;
+
+      enemy.animate(currentTime)
 
       //stop enemy from leaving the map in x direction
       if (enemy.position.x < -75) {
@@ -101,7 +101,24 @@ export class Player {
       } else if (enemy.position.y > 1100) {
         enemy.position.y = 1100;
       }
+
+
+      for (const obstacle of obstacles) {
+        if (obstacle.checkCollision(enemy, obstacle) && obstacle.obstacleType === "collide") {
+          // Reverse enemy direction when it collides with an obstacle
+          enemy.velocity.x *= -1; // Reverse x direction
+          enemy.velocity.y *= -1; // Reverse y direction
+
+          // Slightly adjust position to prevent getting stuck in the obstacle
+          enemy.position.x += enemy.velocity.x * 2; // Move enemy back a bit
+          enemy.position.y += enemy.velocity.y * 2;
+        }
+      }
     }
+
+
+
+
 
     //resets the collisions
     this.collisions = { up: false, down: false, left: false, right: false };
@@ -130,11 +147,11 @@ export class Player {
       }
       // Player collision with enemies
       for (const enemy of map.enemies) {
-        if (obstacle.checkCollision(this, enemy)){
-        // Initialize lastDamageTime for each enemy if it doesn't exist
-        if (!enemy.lastDamageTime || (currentTime - enemy.lastDamageTime > 1000)) {
-          this.health -= 1  //player takes damage
-          enemy.lastDamageTime = currentTime //update the last damage time    
+        if (obstacle.checkCollision(this, enemy)) {
+          // Initialize lastDamageTime for each enemy if it doesn't exist
+          if (!enemy.lastDamageTime || (currentTime - enemy.lastDamageTime > 1000)) {
+            this.health -= 1  //player takes damage
+            enemy.lastDamageTime = currentTime //update the last damage time    
           }
         }
       }
@@ -149,16 +166,7 @@ export class Player {
       this.state = "moving";
     }
 
-    // Handle player animations
-    if (this.state === "moving") {
-      if (currentTime - this.lastFrameChangeTime >= this.frameDuration) {
-        this.lastFrameChangeTime = currentTime
-        this.currentFrameIndex = (this.currentFrameIndex + 1) % this.images[this.direction].length
-        this.image = this.loadedImages[this.images[this.direction][this.currentFrameIndex]]
-      }
-    } else if (this.state === "idle") {
-      this.image = this.loadedImages[this.images[this.direction][2]]
-    }
+    this.animate(currentTime)
 
     // Set the held item in the inventory
     inventory.heldItem = inventory.inventory[0][0];
@@ -312,7 +320,23 @@ export class Player {
 
   }
 
+  animate(currentTime) {
+    // Handle player animations
+    if (this.state === "moving" || this.state === "flee" || this.state === "patrol" || this.state === "chase") {
+      // if (this.direction === "forward" && this.currentFrameIndex !== 2) {
+      //   this.size.y = 96
+      // }
+      // else { this.size.y = 92 }
 
+      if (currentTime - this.lastFrameChangeTime >= this.frameDuration) {
+        this.lastFrameChangeTime = currentTime
+        this.currentFrameIndex = (this.currentFrameIndex + 1) % this.images[this.direction].length
+        this.image = this.loadedImages[this.images[this.direction][this.currentFrameIndex]]
+      }
+    } else if (this.state === "idle") {
+      this.image = this.loadedImages[this.images[this.direction][2]]
+    }
+  }
 
 }
 

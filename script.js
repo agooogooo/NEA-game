@@ -19,7 +19,7 @@ let elapsedTime = 0;
 export let mouseDown = false
 
 // stores all of the images so they can be loaded
-const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png"]
+const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/enemy/enemy_front.png", "images/enemy/enemy_back.png", "images/enemy/enemy_backwalk1.png", "images/enemy/enemy_backwalk2.png", "images/enemy/enemy_frontwalk2.png", "images/enemy/enemy_frontwalk1.png"]
 
 const playerImages = {
   forward: ["images/player/been.png"],
@@ -56,6 +56,12 @@ loadImages(allImages, function() {
 
 function gamesetup() {
   player = new Player({ x: 570, y: 300 }, loadedImages, ctx, "player") //defines key classes as variables
+  player.images = {//puts all the images in the order that they are animated
+      forward: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
+      left: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+      right: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+      back: ["images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerBack.png"]
+    }
   map = new Map(loadedImages);
   inventory = new Inventory(loadedImages, mousePos, player.position, mouseDown)
   map.create() //creates the map before anything else happens
