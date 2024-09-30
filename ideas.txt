@@ -4,7 +4,7 @@ create enemies-✅
 make them move-✅
 have the enemies have health-✅
 change the collisions a bit to input the thing not only the hitbox-✅
-have the player have health that works and is on a timer for how much damage can be taken-✅
+have the player have health that works and is on a timer for how much damage can be taken per enemy-✅
 have the enemies attack-✅
 enemy collisions-✅
 dying-✅

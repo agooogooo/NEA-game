@@ -26,17 +26,17 @@ const playerImages = {
   left: ["images/player/been.png"],
   right: ["images/player/been.png"],
   back: ["images/player/playerBack.png"],
-};
+}
 
-const loadedImages = {};
+const loadedImages = {}
 
 function loadImages(images, callback) {
   let loadedCount = 0;
-  const totalCount = images.length;
+  const totalCount = images.length
 
   for (let i = 0; i < images.length; i++) { //goes through the array
-    const img = new Image();
-    const src = images[i];
+    const img = new Image()
+    const src = images[i]
     img.src = src;
     img.onload = function() { //loads in all of the images 
       loadedImages[src] = img;
@@ -210,7 +210,7 @@ function update(timestamp) {
 
 // the gameloop which repeats and holds all functions clearing, updating and drawing everything every frame
 function gameloop(timestamp) {
-  if (player.health === 0){//if the player has run out of health then they lose the game
+  if (player.health < 1){//if the player has run out of health then they lose the game
     ctx.clearRect(-100000, -100000, 10000000, 1000000)
   ctx.fillText(`YOU DIED,`, player.position.x, player.position.y)
     player.state ="dead"
