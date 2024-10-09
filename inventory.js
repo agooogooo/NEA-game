@@ -65,8 +65,8 @@ export class Inventory {
     const currentTime = Date.now(); // Get the current time
 
     if (this.heldItem === this.loadedImages["images/other/bow.png"]) {
-      const X = this.mousePos.x - 600
-      const Y = this.mousePos.y - 346
+      const X = this.mousePos.x - 998
+      const Y = this.mousePos.y - 530
       this.angle = Math.atan2(Y, X);//calculates the angle from the player to the mouse
 
       // Calculate the position of the bow relative to the player
@@ -82,7 +82,7 @@ export class Inventory {
       if (mouseDown === true && currentTime - this.lastFireTime >= this.fireCooldown) {
         // Create a new projectile at the exact position of the bow
         const projectile = new Projectile(
-          this.loadedImages["images/other/tree.png"],
+          this.loadedImages["images/other/skull.png"],
           {
             x: bowX + this.playerPos.x - 570,
             y: bowY + this.playerPos.y - 300
@@ -144,7 +144,7 @@ export class Projectile {
     // Draw the hitbox 
     ctx.strokeStyle = 'red'
     ctx.lineWidth = 2
-    ctx.strokeRect(-this.hitboxSize.x / 2, -this.hitboxSize.y / 2, this.hitboxSize.x, this.hitboxSize.y)
+    //ctx.strokeRect(-this.hitboxSize.x / 2, -this.hitboxSize.y / 2, this.hitboxSize.x, this.hitboxSize.y)
 
     ctx.restore()
   }
