@@ -39,6 +39,7 @@ function loadImages(images, callback) {
     const src = images[i]
     img.src = src;
     img.style.imageRendering = 'pixelated'
+    
     img.onload = function() { //loads in all of the images 
       loadedImages[src] = img;
       loadedCount++;
@@ -53,15 +54,15 @@ const allImages = [...Object.values(playerImages).flat(), ...mapImages];
 
 loadImages(allImages, function() {
   gamesetup()
-});
+})
 
 function gamesetup() {
   player = new Player({ x: 570, y: 300 }, loadedImages, ctx, "player") //defines key classes as variables
   player.size.x = 84
   player.images = {//puts all the images in the order that they are animated
     forward: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
-    left: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
-    right: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+    left: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
+    right: ["images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/player/been.png"],
     back: ["images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerBack.png"]
   }
   map = new Map(loadedImages);
@@ -105,14 +106,12 @@ addEventListener("keydown", ({ key, repeat }) => {
   if (!keysPressed.includes(key.toLowerCase())) {
     keysPressed.unshift(key.toLowerCase());
   }
-  console.log(keysPressed);
 });
 
 // removes when that key is still not pressed
 addEventListener("keyup", ({ key }) => {
   if (keysPressed.includes(key.toLowerCase())) {
     keysPressed.splice(keysPressed.indexOf(key.toLowerCase()), 1);
-    console.log(keysPressed)
   }
 });
 
@@ -214,11 +213,17 @@ function update(timestamp) {
 function gameloop(timestamp) {
   if (player.health < 1) {//if the player has run out of health then they lose the game
     ctx.clearRect(-100000, -100000, 10000000, 1000000)
-    ctx.fillText(`YOU DIED`, player.position.x, player.position.y)
-    player.level()
+    ctx.fillText(`YOU DIED press r to respawn`, player.position.x, player.position.y)
     player.state = "dead"
     if (keysPressed.includes("r")) {
+      map.enemies = []
       player.health = 100
+      ctx.translate(player.position.x-570, player.position.y-300)
+      player.position.x = 570
+      player.position.y = 300
+      player.levelcounter = -1
+      player.keyCollected = true
+      player.level()
     }
   }
   else {

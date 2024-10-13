@@ -13,7 +13,7 @@ export class Obstacle {
     this.coords.y = this.coords.y + 1
     //defines the level if needed
     this.level = level
-  }//this code is bad
+  }
 
   makeHitbox(ctx) {
     //draws and defines the hitbox of the obstacle

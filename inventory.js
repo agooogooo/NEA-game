@@ -11,6 +11,7 @@ export class Inventory {
     this.hoverImage = loadedImages["images/other/hover.png"]
     this.playerPos = playerPos
     this.angle = 0
+    this.ammo = 10000000000
 
     // List of projectiles
     this.projectiles = []
@@ -65,13 +66,11 @@ export class Inventory {
     const currentTime = Date.now(); // Get the current time
 
     if (this.heldItem === this.loadedImages["images/other/bow.png"]) {
-      const X = this.mousePos.x - 998
-      const Y = this.mousePos.y - 530
+      const X = this.mousePos.x - 998; const Y = this.mousePos.y - 530
       this.angle = Math.atan2(Y, X);//calculates the angle from the player to the mouse
 
       // Calculate the position of the bow relative to the player
-      const bowX = 600 + Math.cos(this.angle) * 100;
-      const bowY = 346 + Math.sin(this.angle) * 100;
+      const bowX = 600 + Math.cos(this.angle) * 100; const bowY = 346 + Math.sin(this.angle) * 100;
 
       ctx.save();
       ctx.translate(bowX + this.playerPos.x - 570, bowY + this.playerPos.y - 300);
@@ -79,7 +78,7 @@ export class Inventory {
       ctx.drawImage(this.loadedImages["images/other/bow.png"], -22.5, -22.5, 45, 45);
 
       // Check if the mouse is down and the cooldown has expired
-      if (mouseDown === true && currentTime - this.lastFireTime >= this.fireCooldown) {
+      if (mouseDown === true && currentTime - this.lastFireTime >= this.fireCooldown && this.ammo > 0) {
         // Create a new projectile at the exact position of the bow
         const projectile = new Projectile(
           this.loadedImages["images/other/skull.png"],
@@ -89,6 +88,7 @@ export class Inventory {
           },
           this.angle
         );
+        this.ammo -= 1
         this.projectiles.push(projectile)
 
         // Update the lastFireTime to the current time
