@@ -15,12 +15,14 @@ export let inventory
 //sets a timer
 let startTime = Date.now()
 let elapsedTime = 0
+let completed = false
+let finishtime = 0
 
 export let mouseDown = false
 
 // stores all of the images so they can be loaded
-const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/enemy/enemy_front.png", "images/enemy/enemy_back.png", "images/enemy/enemy_backwalk1.png", "images/enemy/enemy_backwalk2.png", "images/enemy/enemy_frontwalk2.png", "images/enemy/enemy_frontwalk1.png", "images/other/cactus.png", "images/other/bone.png", "images/other/skull.png", "images/other/roads.png", "images/other/key.png"]
-
+const mapImages = ["images/other/floor.png", "images/other/inventorySlot.png", "images/other/waste_bucket.png", "images/other/tree.png", "images/other/rocks.png", "images/other/grass/grass1.png", "images/other/grass/grass2.png", "images/other/grass/grass3.png", "images/other/grass/grass4.png", "images/other/markers/level_marker.png", "images/other/bow.png", "images/player/playerBackWalk1.png", "images/player/playerBackWalk2.png", "images/player/playerFrontWalk1.png", "images/player/playerFrontWalk2.png", "images/enemy/enemy_front.png", "images/enemy/enemy_back.png", "images/enemy/enemy_backwalk1.png", "images/enemy/enemy_backwalk2.png", "images/enemy/enemy_frontwalk2.png", "images/enemy/enemy_frontwalk1.png", "images/other/cactus.png", "images/other/bone.png", "images/other/skull.png", "images/other/roads.png", "images/other/key.png", 
+                   "images/enemy/boss.png"]
 const playerImages = {
   forward: ["images/player/been.png"],
   left: ["images/player/been.png"],
@@ -181,9 +183,10 @@ function canvasMovement() { //controls player movement and direction changing de
 
 // draws any UI
 function drawUI() {
-  ctx.font = "30px Comic Sans MS"
+  ctx.font = "20px Comic Sans MS"
   ctx.fillStyle = "#424ef5"
-  ctx.fillText(`Time: ${elapsedTime}s, ${Math.floor(mousePos.x)},${Math.floor(mousePos.y)}, ${Math.floor(player.position.x)},${Math.floor(player.position.y)}, ${player.health}, ${map.enemies.length}, ${player.state}, ${player.instructions[player.levelcounter]}, ${player.keyCollected}`, -100 + player.position.x, -200 + player.position.y)
+  ctx.fillText(`TIME: ${elapsedTime}s, HEALTH: ${player.health}, ENEMIES REMAINING: ${map.enemies.length}, OBJECTIVE: ${player.instructions[player.levelcounter]}, KEY COLLECTED: ${player.keyCollected}`,  + player.position.x, -200 + player.position.y)
+  ctx.fillText(`level: ${player.levelcounter+1}`,  + player.position.x, -250 + player.position.y)
 }
 
 // keeps all of the functions for anything that gets drawn onto the canvas
@@ -226,6 +229,14 @@ function gameloop(timestamp) {
       player.level()
     }
   }
+    else if(player.levelcounter === 6){
+      ctx.clearRect(-100000, -100000, 10000000, 1000000)
+      if (completed === false){
+        finishtime = timestamp
+        completed = true
+      }
+      ctx.fillText(`YOU WIN it took you ${Math.floor(finishtime/1000)} seconds`, player.position.x, player.position.y)
+    }
   else {
     ctx.clearRect(-100000, -100000, 10000000, 1000000)
     update(timestamp)

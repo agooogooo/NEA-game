@@ -2,6 +2,7 @@ import { Obstacle } from "./obstacle.js"
 import { Player } from "./player.js"
 import { map, player } from "./script.js"
 
+
 export class Map {
   constructor(loadedImages) {
     this.loadedImages = loadedImages
@@ -43,7 +44,7 @@ export class Map {
       ["", "", "", "", "", "", "", "i", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "k", "i", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["11", "", "", "", "", "", "", "", "i", "", "", "r", "", "w", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", "", "", "i", "", "", "r", "", "w", "", "", "", "", "", ""],
       ["", "", "", "", "", "r", "r", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "r", "", "i", "", "", "", "", "", "", "", "", "", "32", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "i", "r", "", "", "", "", ""],
@@ -51,15 +52,15 @@ export class Map {
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["13", "", "", "", "", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "33", "", "", "", "", ""],
-      ["14", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+      ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "w", "", "", "", "", "", "", "", "", "", "w", "", ""],
       ["", "", "", "w", "", "", "", "", "", "w", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "w", "", "", "", "32", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ["15", "", "", "w", "", "", "", "", "w", "", "", "", "", "", "", "", "r", "", "", ""],
+      ["", "", "", "w", "", "", "", "", "w", "", "", "", "", "", "", "", "r", "", "", ""],
       ["", "", "", "w", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "w", "", "", "", "w", "w", "", "r", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "w", "r", "", "", "", "", "", "", "", "", "", "w", "", "", "", "", ""],
@@ -82,8 +83,9 @@ export class Map {
       ctx.fillStyle = "#e7be2c"
       ctx.fillRect(this.position.x - 64, this.position.y - 64, 1920, 1280)
     }
-    if (this.location === "city") {
-      ctx.drawImage(this.loadedImages["images/other/roads.png"], 0, 0, 1920, 1280)
+    if (this.location === "stone") {
+      ctx.fillStyle = "#2d3439"
+      ctx.fillRect(this.position.x - 64, this.position.y - 64, 1920, 1280)
     }
     if (this.location === "forest") {
       for (let i = 0; i < this.mapBackground.length; i++) {//goes through every tile in the map to draw it with a random drawing which is created at the start
@@ -165,6 +167,20 @@ export class Map {
         else if (this.mapForeground[i][j] > 30 && this.mapForeground[i][j] < 40) {
           this.mapForeground[i][j] -= 1
           let enemy = new Player({ x: this.newPosition.x, y: this.newPosition.y }, this.loadedImages, ctx, "enemy")
+          this.enemies.push(enemy)
+        }
+        else if (this.mapForeground[i][j] > 40 && this.mapForeground[i][j] < 50) {
+          this.mapForeground[i][j] -= 1
+          let enemy = new Player({ x: this.newPosition.x, y: this.newPosition.y }, this.loadedImages, ctx, "enemy")
+          enemy.images =  {//puts all the images in the order that they are animated
+              forward: ["images/enemy/boss.png", "images/enemy/boss.png", "images/enemy/boss.png"],
+              left: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+              right: ["images/player/been.png", "images/player/been.png", "images/player/been.png"],
+              back: ["images/enemy/enemy_backwalk1.png", "images/enemy/enemy_backwalk2.png", "images/enemy/enemy_back.png"]
+            }
+          enemy.size.x = 92
+          enemy.size.y = 112
+          enemy.health = 300
           this.enemies.push(enemy)
         }
       }
