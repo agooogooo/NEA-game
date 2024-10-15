@@ -143,7 +143,7 @@ export class Player {
         for (const enemy of map.enemies) {
           if (obstacle.checkCollision(projectile, enemy)) {
             inventory.projectiles.splice(i, 1)
-            enemy.health -= 1000
+            enemy.health -= 10
           }
         }
       }
@@ -303,7 +303,7 @@ export class Player {
 
   level() {
     // way to easily change the background between levels or when moving to a different place
-    if ((this.keyCollected)) {
+    if ((this.keyCollected) && map.enemies.length ===0) {
       this.keyCollected = false
       this.levelcounter += 1
       if (this.levelcounter === 0){
