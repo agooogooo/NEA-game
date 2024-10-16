@@ -255,6 +255,7 @@ function gameloop(timestamp) {
     console.log("reload done")
     inventory.reload = false
     inventory.shotsFired = 0
+    map.enemies = []
   }
   requestAnimationFrame(gameloop)
 }
