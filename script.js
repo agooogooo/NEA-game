@@ -234,7 +234,7 @@ function gameloop(timestamp) {
       player.level()
     }
   }
-    else if(player.levelcounter === 6){
+    else if(player.levelcounter === 5){
       ctx.clearRect(-100000, -100000, 10000000, 1000000)
       if (completed === false){
         finishtime = timestamp
@@ -255,7 +255,6 @@ function gameloop(timestamp) {
     console.log("reload done")
     inventory.reload = false
     inventory.shotsFired = 0
-    map.enemies = []
   }
   requestAnimationFrame(gameloop)
 }
