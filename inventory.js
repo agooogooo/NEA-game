@@ -1,6 +1,4 @@
-import { mouseDown } from './script.js'
-
-
+import {mouseDown} from "./script.js"
 export class Inventory {
   constructor(loadedImages, mousePos, playerPos) {
     this.loadedImages = loadedImages
@@ -17,10 +15,18 @@ export class Inventory {
     this.projectiles = []
 
     // Cooldown timer for firing
-    this.fireCooldown = 100; // time delay seconds
+    this.fireCooldown = 100; // time delay in milliseconds
     this.lastFireTime = 0; // Time when the last projectile was fired
 
-    this.inventory = [//array to hold any picked up items
+    // Firing counter mechanism
+    this.shotsFired = 0; // Shots fired since last reload
+    this.maxShotsBeforeReload = 20; // Maximum shots before reload
+    this.reload = false; // External flag to determine if reloading
+    this.reloadTime = 0
+    this.elapsedTime = 0
+    
+
+    this.inventory = [ //array to hold any picked up items
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
@@ -32,11 +38,10 @@ export class Inventory {
 
   toggleInventory() {
     this.inventoryOpened = !this.inventoryOpened
-    //changes whenever the inventory is opened or closed
   }
 
   draw(ctx) {
-    for (let i = 0; i < this.inventory[0].length; i++) {//goes through the inventory and draws all the squares
+    for (let i = 0; i < this.inventory[0].length; i++) {
       for (let j = 0; j < this.inventory.length; j++) {
         const invX = this.position.x + 50 * i
         const invY = this.position.y + 50 * j
@@ -46,7 +51,7 @@ export class Inventory {
         const item = this.inventory[j][i]
         if (item) {
           ctx.drawImage(item, invX, invY, this.size.x, this.size.y)
-        }//if there is an item in the slot then it draws an image of that item
+        }
       }
     }
   }
@@ -57,7 +62,7 @@ export class Inventory {
         if (this.inventory[i][j] === "") {
           this.inventory[i][j] = image
           return;
-        }//adds an image to the inventory when it gets picked up
+        }
       }
     }
   }
@@ -69,17 +74,17 @@ export class Inventory {
       const X = this.mousePos.x - 998; const Y = this.mousePos.y - 530
       this.angle = Math.atan2(Y, X);//calculates the angle from the player to the mouse
 
-      // Calculate the position of the bow relative to the player
-      const bowX = 600 + Math.cos(this.angle) * 100; const bowY = 346 + Math.sin(this.angle) * 100;
+      const bowX = 600 + Math.cos(this.angle) * 100;
+      const bowY = 346 + Math.sin(this.angle) * 100;
 
       ctx.save();
       ctx.translate(bowX + this.playerPos.x - 570, bowY + this.playerPos.y - 300);
-      ctx.rotate(this.angle + 3 * (Math.PI) / 4);//alters the rotation
+      ctx.rotate(this.angle + 3 * (Math.PI) / 4);
       ctx.drawImage(this.loadedImages["images/other/bow.png"], -22.5, -22.5, 45, 45);
 
-      // Check if the mouse is down and the cooldown has expired
-      if (mouseDown === true && currentTime - this.lastFireTime >= this.fireCooldown && this.ammo > 0) {
-        // Create a new projectile at the exact position of the bow
+      // Check if the mouse is down, the cooldown has expired, and you haven't fired 15 shots yet
+      if (this.shotsFired < this.maxShotsBeforeReload && mouseDown === true && currentTime - this.lastFireTime >= this.fireCooldown && this.ammo > 0) {
+        // Fire a shot
         const projectile = new Projectile(
           this.loadedImages["images/other/skull.png"],
           {
@@ -88,29 +93,37 @@ export class Inventory {
           },
           this.angle
         );
-        this.ammo -= 1
-        this.projectiles.push(projectile)
+        this.ammo -= 1;
+        this.projectiles.push(projectile);
+        this.shotsFired += 1; // Increment shots fired
 
         // Update the lastFireTime to the current time
-        this.lastFireTime = currentTime
+        this.lastFireTime = currentTime;
       }
 
-      ctx.restore()
+      // If shotsFired >= 15 and reload is false, player can't shoot
+      if (this.shotsFired >= this.maxShotsBeforeReload && !this.reload) {
+        // Optionally, you could show a "Can't shoot, reloading..." message
+        ctx.fillStyle = "red";
+        ctx.font = "20px Arial";
+        ctx.fillText("Press r to reload", 0, 0);
+      }
+
+      ctx.restore();
     }
 
     // Update and draw each projectile
     this.projectiles.forEach((projectile, index) => {
-      projectile.update()
-      projectile.draw(ctx)
+      projectile.update();
+      projectile.draw(ctx);
 
-      // Remove the projectile if it has traveled out of bounds
       if (projectile.isOutOfBounds()) {
         this.projectiles.splice(index, 1);
       }
-    })
-
+    });
   }
 }
+
 
 export class Projectile {
   constructor(image, position, angle) {
@@ -168,4 +181,3 @@ export class Projectile {
     }
   }
 }
-

@@ -117,7 +117,7 @@ addEventListener("keyup", ({ key }) => {
   }
 });
 
-function canvasMovement() { //controls player movement and direction changing depending on inputs
+function canvasMovement(timestamp) { //controls player movement and direction changing depending on inputs
   let maxVelocity = 0
 
   //the number of pixels that the canvas will be translated each frame
@@ -177,6 +177,11 @@ function canvasMovement() { //controls player movement and direction changing de
     player.velocity.y = 0
     translateY = 0
   }
+
+  if (keysPressed.includes("r")){
+    inventory.reload = true
+    inventory.reloadTime = timestamp
+  }
   ctx.translate(translateX, translateY)//translates the canvas after the movement is set
 }
 
@@ -204,7 +209,7 @@ function draw() {
 // runs any functions or changes any variables that need to be updated
 function update(timestamp) {
   elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-  canvasMovement();
+  canvasMovement(timestamp);
   player.update(map.obstacles, timestamp, ctx);
   map.update()
   inventory.position.x = player.position.x - 170;
@@ -241,6 +246,15 @@ function gameloop(timestamp) {
     ctx.clearRect(-100000, -100000, 10000000, 1000000)
     update(timestamp)
     draw()
+  }
+  if(inventory.reload){
+    ctx.fillText(`reloading`, player.position.x, player.position.y)
+    inventory.elapsedTime = timestamp - inventory.reloadTime
+  }
+  if(inventory.reload && inventory.elapsedTime > 3000){
+    console.log("reload done")
+    inventory.reload = false
+    inventory.shotsFired = 0
   }
   requestAnimationFrame(gameloop)
 }
