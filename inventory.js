@@ -27,7 +27,7 @@ export class Inventory {
     
 
     this.inventory = [ //array to hold any picked up items
-      ["", "", "", "", "", "", "", "", "", "", ""],
+      [this.loadedImages["images/other/bow.png"], "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
