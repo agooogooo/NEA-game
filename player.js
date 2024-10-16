@@ -277,10 +277,10 @@ export class Player {
 
   makeHitbox(ctx) {
     // creates the hitbox for the player and draws it on the map
-    this.hitboxPosition.x = this.position.x + (this.size.x / 2 - this.hitboxSize.x / 2);
-    this.hitboxPosition.y = this.position.y + (this.size.y - this.hitboxSize.y);
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y);
+    // this.hitboxPosition.x = this.position.x + (this.size.x / 2 - this.hitboxSize.x / 2);
+    // this.hitboxPosition.y = this.position.y + (this.size.y - this.hitboxSize.y);
+    // ctx.strokeStyle = 'red';
+    // ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y);
   }
 
 

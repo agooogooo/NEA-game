@@ -16,11 +16,11 @@ export class Obstacle {
   }
 
   makeHitbox(ctx) {
-    //draws and defines the hitbox of the obstacle
-    this.hitboxPosition.x = this.position.x + (this.size.x / 2 - this.hitboxSize.x / 2)
-    this.hitboxPosition.y = this.position.y + (this.size.y - this.hitboxSize.y)
-    ctx.strokeStyle = 'blue'
-    ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y);
+    // //draws and defines the hitbox of the obstacle
+    // this.hitboxPosition.x = this.position.x + (this.size.x / 2 - this.hitboxSize.x / 2)
+    // this.hitboxPosition.y = this.position.y + (this.size.y - this.hitboxSize.y)
+    // ctx.strokeStyle = 'blue'
+    // ctx.strokeRect(this.hitboxPosition.x, this.hitboxPosition.y, this.hitboxSize.x, this.hitboxSize.y);
   }
 
   checkCollision(a, b) {//checks to see if there is any overlap between the hitboxes of the 2 inputted parameters
